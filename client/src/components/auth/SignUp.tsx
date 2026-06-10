@@ -5,16 +5,17 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { SignUpInputState, signUpSchema } from "@/schema/userSchema";
 
 export default function SignUp() {
   const loading = false;
 
-  type SignUpInputState = {
-    fullname: string;
-    email: string;
-    password: string;
-    contact: string;
-  };
+  //   type SignUpInputState = {
+  //     fullname: string;
+  //     email: string;
+  //     password: string;
+  //     contact: string;
+  //   };
 
   const [input, setInput] = useState<SignUpInputState>({
     fullname: "",
@@ -23,6 +24,8 @@ export default function SignUp() {
     contact: "",
   });
 
+  const [error, setError] = useState<Partial<SignUpInputState>>({});
+
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
@@ -30,6 +33,12 @@ export default function SignUp() {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const result = signUpSchema.safeParse(input);
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setError(fieldErrors as Partial<SignUpInputState>);
+      return;
+    }
     console.log(input);
   };
 
@@ -63,6 +72,11 @@ export default function SignUp() {
               onChange={changeEventHandler}
             />
             <User className="absolute text-gray-400  inset-y-1" />
+            {error && (
+              <span className="text-red-600 text-sm font-semibold">
+                {error.fullname}
+              </span>
+            )}
           </div>
         </div>
         <div className="mb-4">
@@ -82,6 +96,11 @@ export default function SignUp() {
               onChange={changeEventHandler}
             />
             <Mail className="absolute text-gray-400  inset-y-1   " />
+            {error && (
+              <span className="text-red-600 text-sm font-semibold">
+                {error.email}
+              </span>
+            )}
           </div>
         </div>
         <div className="mb-4">
@@ -101,7 +120,12 @@ export default function SignUp() {
               value={input.password}
               onChange={changeEventHandler}
             />
-            <LockKeyhole className="absolute text-gray-400  inset-y-1   " />
+            <LockKeyhole className="absolute text-gray-400  inset-y-1" />
+            {error && (
+              <span className="text-red-600 text-sm font-semibold">
+                {error.password}
+              </span>
+            )}
           </div>
         </div>
         <div className="mb-4">
@@ -120,7 +144,12 @@ export default function SignUp() {
               value={input.contact}
               onChange={changeEventHandler}
             />
-            <PhoneCall className="absolute text-gray-400  inset-y-1   " />
+            <PhoneCall className="absolute text-gray-400  inset-y-1" />
+            {error && (
+              <span className="text-red-600 text-sm font-semibold">
+                {error.contact}
+              </span>
+            )}
           </div>
         </div>
         <div className="flex items-center justify-between">

@@ -5,20 +5,22 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { LoginInputState, loginSchema } from "@/schema/userSchema";
 
 export default function Login() {
   const loading = false;
 
-  type LoginInputState = {
-    email: string;
-    password: string;
-  };
+  // type LoginInputState = {
+  //   email: string;
+  //   password: string;
+  // };
 
   const [input, setInput] = useState<LoginInputState>({
     email: "",
     password: "",
   });
 
+  const [error, setError] = useState<Partial<LoginInputState>>({});
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
@@ -26,6 +28,12 @@ export default function Login() {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const result = loginSchema.safeParse(input);
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setError(fieldErrors as Partial<LoginInputState>);
+      return;
+    }
     console.log(input);
   };
 
@@ -59,6 +67,11 @@ export default function Login() {
               onChange={changeEventHandler}
             />
             <Mail className="absolute text-gray-400  inset-y-1   " />
+            {error && (
+              <span className="font-semibold text-sm text-red-600">
+                {error.email}
+              </span>
+            )}
           </div>
         </div>
         <div className="mb-4">
@@ -79,6 +92,11 @@ export default function Login() {
               onChange={changeEventHandler}
             />
             <LockKeyhole className="absolute text-gray-400  inset-y-1   " />
+            {error && (
+              <span className="font-semibold text-sm text-red-600">
+                {error.password}
+              </span>
+            )}
           </div>
         </div>
         <div className="flex items-center justify-between">
