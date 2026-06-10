@@ -1,10 +1,21 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import MainLayout from "./components/shared/MainLayout";
+import SignUp from "./components/auth/SignUp";
+import Login from "./components/auth/Login";
 
 function App() {
+  const appRouter = createBrowserRouter([
+    {
+      path: "/",
+      element: <MainLayout />,
+      children: [{ index: true, element: <div>Home</div> }],
+    },
+    { path: "/signup", element: <SignUp /> },
+    { path: "/login", element: <Login /> },
+  ]);
   return (
     <>
-      <Button className="bg-orange hover:bg-hoverOrange">button</Button>
+      <RouterProvider router={appRouter} />
     </>
   );
 }
