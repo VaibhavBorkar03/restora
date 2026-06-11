@@ -47,7 +47,7 @@ export const VerifyEmail = () => {
               key={idx}
               value={letter}
               maxLength={1}
-              className="w-10 h-10 text-center text-xl border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+              className="w-10 h-10 text-center text-xl border border-gray-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleInputChange(idx, e.target.value)
               }

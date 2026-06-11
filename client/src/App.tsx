@@ -5,13 +5,14 @@ import Login from "./components/auth/Login";
 import { ForgotPassword } from "./components/auth/ForgotPassword";
 import { ResetPassword } from "./components/auth/ResetPassword";
 import { VerifyEmail } from "./components/auth/VerifyEmail";
+import { Navbar } from "./components/shared/Navbar";
 
 function App() {
   const appRouter = createBrowserRouter([
     {
       path: "/",
       element: <MainLayout />,
-      children: [{ index: true, element: <div>Home</div> }],
+      children: [{ index: true, element: <Navbar /> }],
     },
     { path: "/signup", element: <SignUp /> },
     { path: "/login", element: <Login /> },
