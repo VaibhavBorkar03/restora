@@ -117,6 +117,9 @@ export default function Login() {
           )}
         </div>
         <Separator />
+        <div className="hover:text-blue-600 hover:underline text-sm mt-3 text-center">
+          <Link to="/forgot-password">Forgot Password</Link>
+        </div>
         <p className="text-center text-sm text-[#F59E0B] mt-4 font-semibold">
           Don't have an account?{" "}
           <Link to="/signup">
