@@ -8,8 +8,8 @@ export const ForgotPassword = () => {
   const loading = false;
   const [email, setEmail] = useState<string>("");
   return (
-    <div className="flex items-center justify-center min-h-screen w-full">
-      <form className="flex rounded-lg w-full flex-col gap-4 md:p-8 max-w-md text-center border border-gray-100 shadow-lg">
+    <div className="flex items-center justify-center h-screen ">
+      <form className="flex rounded-lg w-full flex-col gap-4 p-6 max-w-sm text-center border border-gray-100 shadow-lg">
         <div>
           <h1 className="font-extrabold text-2xl ">Forgot Password</h1>
           <p className="text-sm text-gray-600">
