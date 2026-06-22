@@ -6,13 +6,17 @@ import { ForgotPassword } from "./components/auth/ForgotPassword";
 import { ResetPassword } from "./components/auth/ResetPassword";
 import { VerifyEmail } from "./components/auth/VerifyEmail";
 import HomeScreen from "./screens/HomeScreen";
+import { ProfileScreen } from "./screens/ProfileScreen";
 
 function App() {
   const appRouter = createBrowserRouter([
     {
       path: "/",
       element: <MainLayout />,
-      children: [{ index: true, element: <HomeScreen /> }],
+      children: [
+        { index: true, element: <HomeScreen /> },
+        { path: "/profile", element: <ProfileScreen /> },
+      ],
     },
     { path: "/signup", element: <SignUp /> },
     { path: "/login", element: <Login /> },
