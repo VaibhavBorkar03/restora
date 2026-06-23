@@ -7,6 +7,7 @@ import { ResetPassword } from "./components/auth/ResetPassword";
 import { VerifyEmail } from "./components/auth/VerifyEmail";
 import HomeScreen from "./screens/HomeScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
+import SearchScreen from "./screens/SearchScreen";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -16,6 +17,7 @@ function App() {
       children: [
         { index: true, element: <HomeScreen /> },
         { path: "/profile", element: <ProfileScreen /> },
+        { path: "/search", element: <SearchScreen /> },
       ],
     },
     { path: "/signup", element: <SignUp /> },
