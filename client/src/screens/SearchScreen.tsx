@@ -15,7 +15,7 @@ function SearchScreen() {
     <div className="max-w-7xl mx-auto ">
       <div className="flex flex-col  md:flex-row justify-between gap-7">
         {/* filter */}
-        <div >
+        <div>
           <FilterCard />
         </div>
         {/* food items */}
@@ -41,8 +41,8 @@ function SearchScreen() {
             ))}
           </div>
           <div className="grid md:grid-cols-3 gap-4 mt-4 md:flex-row">
-            {[1, 2, 3].map(() => (
-              <Card className="bg-white shadow-lg">
+            {[1, 2, 3].map((idx: number) => (
+              <Card className="bg-white shadow-lg" key={idx}>
                 <div className="relative">
                   <AspectRatio ratio={16 / 6}>
                     <img
@@ -73,7 +73,7 @@ function SearchScreen() {
                     {appliedFilter.map((cuisine: string, idx: number) => (
                       <div
                         key={idx}
-                        className=" gap-2 rounded-md bg-gray-500 py-1"
+                        className="gap-2 rounded-md bg-gray-500 py-1"
                       >
                         <Badge>{cuisine}</Badge>
                       </div>
@@ -81,7 +81,7 @@ function SearchScreen() {
                   </div>
                 </CardContent>
                 <CardFooter className="justify-end px-4 py-2">
-                  <Link to={``}>
+                  <Link to={`/restaurent/${123}`}>
                     <Button className="bg-orange">View Menues</Button>
                   </Link>
                 </CardFooter>

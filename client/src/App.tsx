@@ -8,6 +8,7 @@ import { VerifyEmail } from "./components/auth/VerifyEmail";
 import HomeScreen from "./screens/HomeScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
 import SearchScreen from "./screens/SearchScreen";
+import { RestaurentDetailScreen } from "./screens/RestaurentDetailScreen";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -18,6 +19,7 @@ function App() {
         { index: true, element: <HomeScreen /> },
         { path: "/profile", element: <ProfileScreen /> },
         { path: "/search", element: <SearchScreen /> },
+        { path: "/restaurent/:id", element: <RestaurentDetailScreen /> },
       ],
     },
     { path: "/signup", element: <SignUp /> },
