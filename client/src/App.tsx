@@ -12,6 +12,8 @@ import { RestaurentDetailScreen } from "./screens/RestaurentDetailScreen";
 import { CartScreen } from "./screens/CartScreen";
 import { RestaurentScreen } from "./screens/admin/RestaurentScreen";
 import { AddMenuScreen } from "./screens/admin/AddMenuScreen";
+import RestaurentOrdersScreen from "./screens/admin/RestaurentOrdersScreen";
+import ClientOrdersScreen from "./screens/ClientOrdersScreen";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -24,10 +26,12 @@ function App() {
         { path: "/search", element: <SearchScreen /> },
         { path: "/restaurent/:id", element: <RestaurentDetailScreen /> },
         { path: "/cart", element: <CartScreen /> },
+        { path: "/order", element: <ClientOrdersScreen /> },
 
         //admin routes
         { path: "/admin/restaurent", element: <RestaurentScreen /> },
         { path: "/admin/menu", element: <AddMenuScreen /> },
+        { path: "/admin/orders", element: <RestaurentOrdersScreen /> },
       ],
     },
     { path: "/signup", element: <SignUp /> },

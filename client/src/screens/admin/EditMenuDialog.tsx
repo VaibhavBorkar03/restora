@@ -26,7 +26,7 @@ export const EditMenuDialog = ({
 }: {
   editMenuOpen: boolean;
   setEditMenuOpen: Dispatch<SetStateAction<boolean>>;
-  selectedMenu: any;
+  selectedMenu: menuFormState;
 }) => {
   const [input, setInput] = useState<menuFormState>({
     name: "",
@@ -42,7 +42,7 @@ export const EditMenuDialog = ({
       name: selectedMenu?.name || "",
       description: selectedMenu?.description || "",
       price: selectedMenu?.price || 0,
-      image: selectedMenu?.image || undefined,
+      image: selectedMenu?.image || null,
     });
   }, [selectedMenu]);
 
