@@ -11,6 +11,7 @@ import SearchScreen from "./screens/SearchScreen";
 import { RestaurentDetailScreen } from "./screens/RestaurentDetailScreen";
 import { CartScreen } from "./screens/CartScreen";
 import { RestaurentScreen } from "./screens/admin/RestaurentScreen";
+import { AddMenuScreen } from "./screens/admin/AddMenuScreen";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -26,6 +27,7 @@ function App() {
 
         //admin routes
         { path: "/admin/restaurent", element: <RestaurentScreen /> },
+        { path: "/admin/menu", element: <AddMenuScreen /> },
       ],
     },
     { path: "/signup", element: <SignUp /> },
