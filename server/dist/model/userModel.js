@@ -1,26 +1,5 @@
 import mongoose from "mongoose";
-
-export interface IUser {
-  _id: mongoose.Types.ObjectId;
-  fullname: string;
-  email: string;
-  password: string;
-  contact: number;
-  address: string;
-  city: string;
-  country: string;
-  profilePicture: string;
-  admin: boolean;
-  lastLogin?: Date;
-  isVerified?: boolean;
-  resetPasswordToken?: string;
-  resetPasswordExpiresAt?: Date;
-  verificationToken?: string;
-  verificationTokenExpiresAt?: Date;
-}
-
-const userSchema = new mongoose.Schema<IUser>(
-  {
+const userSchema = new mongoose.Schema({
     fullname: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -36,8 +15,5 @@ const userSchema = new mongoose.Schema<IUser>(
     resetPasswordExpiresAt: { type: Date },
     verificationToken: { type: String },
     verificationTokenExpiresAt: Date,
-  },
-  { timestamps: true },
-);
-
+}, { timestamps: true });
 export const User = mongoose.model("User", userSchema);
