@@ -9,6 +9,8 @@ app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
+//api 
+app.use('/api/v1/user')
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {

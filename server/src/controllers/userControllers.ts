@@ -8,6 +8,7 @@ import cloudinary from "../config/cloudinary.js";
 import {
   sendPasswordResetEmail,
   sendResetSuccessEmail,
+  sendWelcomeEmail,
   verificationEmail,
 } from "../utils/email.js";
 
@@ -181,6 +182,69 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
+//for email
+export const verifyEmail = async (req: Request, res: Response) => {
+  try {
+    const { verificationCode } = req.body;
+    const user = await User.findOne({
+      //otp
+      verificationToken: verificationCode,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    }).select("-password");
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User is not exist",
+      });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+
+    await sendWelcomeEmail(user.email, user.fullname);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server errror",
+    });
+  }
+};
+
+// for login
+export const checkAuth = async (req: Request, res: Response) => {
+  try {
+    const userId = req.id;
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User is not exist",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server errror",
+    });
+  }
+};
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.id;
