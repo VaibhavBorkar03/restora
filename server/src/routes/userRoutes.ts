@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  checkAuth,
   forgotPassword,
   login,
   logout,
@@ -12,9 +13,11 @@ import { isAuthenticated } from "../middleware/isAuthenticated.js";
 const router = express.Router();
 
 router.route("/signup").post(signup);
+router.route("/check-auth").post(isAuthenticated, checkAuth);
 router.route("/login").post(login);
-router.route("/logout").post(isAuthenticated, logout);
+router.route("/logout").post(logout);
 router.route("/forgot-password").post(forgotPassword);
-router.route("/reset-password").post(resetPassword);
-router.route("/user/:id/update").post(isAuthenticated, updateProfile);
+router.route("/reset-password/:token").post(resetPassword);
+router.route("/profile/update").post(isAuthenticated, updateProfile);
+
 export default router;

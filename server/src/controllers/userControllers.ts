@@ -167,7 +167,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     user.resetPasswordExpiresAt = undefined;
     await user.save();
 
-    await sendResetSuccessEmail(user.email);
+    await sendResetSuccessEmail(user.email, user.fullname);
 
     return res.status(200).json({
       success: true,

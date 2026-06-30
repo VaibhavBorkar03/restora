@@ -1,17 +1,24 @@
 import { client, sender } from "../config/mailtrap.js";
+import {
+  ResetLinkMail,
+  ResetSuccessEmail,
+  verifyEmailHtml,
+  WelcomeEmailHtml,
+} from "./htmlforEmail.js";
 
 //DISPLAY MESSAGE ON EMAIL
 export const verificationEmail = async (
   email: string,
-  verificationToken: string,
+  verificationToken: string, //otp
 ) => {
   const recipient = [{ email }];
+  const verificatoionCode = verifyEmailHtml(verificationToken);
   try {
     const res = await client.send({
       from: sender,
       to: recipient,
       subject: "Verify your email",
-      html: "",
+      html: verificatoionCode,
       category: "Email verification",
     });
   } catch (error) {
@@ -30,7 +37,7 @@ export const sendPasswordResetEmail = async (
       from: sender,
       to: recipient,
       subject: "Reset your password",
-      html: "",
+      html: ResetLinkMail(resetUrl),
       category: "Reset Password",
     });
   } catch (error) {
@@ -39,14 +46,17 @@ export const sendPasswordResetEmail = async (
   }
 };
 
-export const sendResetSuccessEmail = async (email: string) => {
+export const sendResetSuccessEmail = async (
+  email: string,
+  fullname: string,
+) => {
   const recipient = [{ email }];
   try {
     const res = await client.send({
       from: sender,
       to: recipient,
       subject: "Password reset successfully",
-      html: "",
+      html: ResetSuccessEmail(fullname),
       category: "Password reset",
     });
   } catch (error) {
@@ -62,7 +72,7 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
       from: sender,
       to: recipient,
       subject: "welcome to restora",
-      html: "",
+      html: WelcomeEmailHtml(name),
       template_variables: {
         project_name: "RestOra",
         name: name,
