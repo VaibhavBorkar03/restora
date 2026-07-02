@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
 export interface IMenu {
   name: string;
@@ -7,12 +7,7 @@ export interface IMenu {
   image: string;
 }
 
-export interface IMenuDocument extends IMenu, Document {
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const menuSchema = new mongoose.Schema<IMenuDocument>(
+const menuSchema = new mongoose.Schema<IMenu>(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },

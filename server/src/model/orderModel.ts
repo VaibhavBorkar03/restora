@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 type DeliveryDatails = {
   email: string;
@@ -16,8 +16,8 @@ type CartItems = {
 };
 
 export interface IOrder {
-  user: mongoose.Schema.Types.ObjectId;
-  restaurent: mongoose.Schema.Types.ObjectId;
+  user: Types.ObjectId;
+  restaurent: Types.ObjectId;
   deliveryDetails: DeliveryDatails;
   cartItems: CartItems;
   totalAmount: number;
