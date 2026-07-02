@@ -5,6 +5,8 @@ import connectDB from "./db/connectDB.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
+import restaurantRoutes from "./routes/restauentRoutes.js";
+import menuRoutes from "./routes/menuRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use(cors(corsOptions));
 
 //api
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/restaurant", restaurantRoutes);
+app.use("/api/v1/menu", menuRoutes);
 
 const PORT = process.env.PORT || 8000;
 
