@@ -1,27 +1,23 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Types } from "mongoose";
 
+Types;
 export interface IRestaurent {
-  user: mongoose.Schema.Types.ObjectId;
+  user: Types.ObjectId;
   restaurentName: string;
   city: string;
   country: string;
   deliveryTime: number;
   cuisines: string[];
-  menus: mongoose.Schema.Types.ObjectId[];
+  menus: Types.ObjectId[];
   imageUrl: string;
 }
 
-export interface IRestaurentDocument extends IRestaurent, Document {
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const restaurentSchema = new mongoose.Schema<IRestaurentDocument>(
+const restaurentSchema = new mongoose.Schema<IRestaurent>(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     restaurentName: { type: String, required: true },
     city: { type: String, required: true },
-    country: {},
+    country: { type: String, required: true },
     deliveryTime: { type: Number, required: true },
     cuisines: [{ type: String, required: true }],
     menus: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
