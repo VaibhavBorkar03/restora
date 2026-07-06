@@ -3,22 +3,23 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { LoginInputState, loginSchema } from "@/schema/userSchema";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function Login() {
-  const loading = false;
-
   // type LoginInputState = {
   //   email: string;
   //   password: string;
   // };
 
+  const navigate = useNavigate();
   const [input, setInput] = useState<LoginInputState>({
     email: "",
     password: "",
   });
+  const { login, loading } = useUserStore();
 
   const [error, setError] = useState<Partial<LoginInputState>>({});
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +27,7 @@ export default function Login() {
     setInput({ ...input, [name]: value });
   };
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = loginSchema.safeParse(input);
     if (!result.success) {
@@ -34,7 +35,9 @@ export default function Login() {
       setError(fieldErrors as Partial<LoginInputState>);
       return;
     }
-    console.log(input);
+
+    await login(input);
+    navigate("/");
   };
 
   return (

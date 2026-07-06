@@ -3,13 +3,24 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Link } from "react-router-dom";
 import { Loader2, Mail } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 
 export const ForgotPassword = () => {
-  const loading = false;
+  // const loading = false;
+  const { forgotPassword, loading } = useUserStore();
+
   const [email, setEmail] = useState<string>("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await forgotPassword(email);
+  };
   return (
     <div className="flex items-center justify-center h-screen ">
-      <form className="flex rounded-lg w-full flex-col gap-4 p-6 max-w-sm text-center border border-gray-100 shadow-lg">
+      <form
+        onSubmit={handleSubmit}
+        className="flex rounded-lg w-full flex-col gap-4 p-6 max-w-sm text-center border border-gray-100 shadow-lg"
+      >
         <div>
           <h1 className="font-extrabold text-2xl ">Forgot Password</h1>
           <p className="text-sm text-gray-600">

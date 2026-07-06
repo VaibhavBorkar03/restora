@@ -3,13 +3,12 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { SignUpInputState, signUpSchema } from "@/schema/userSchema";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function SignUp() {
-  const loading = false;
-
   //   type SignUpInputState = {
   //     fullname: string;
   //     email: string;
@@ -23,6 +22,8 @@ export default function SignUp() {
     password: "",
     contact: "",
   });
+  const { signup, loading } = useUserStore();
+  const navigate = useNavigate();
 
   const [error, setError] = useState<Partial<SignUpInputState>>({});
 
@@ -31,7 +32,7 @@ export default function SignUp() {
     setInput({ ...input, [name]: value });
   };
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = signUpSchema.safeParse(input);
     if (!result.success) {
@@ -39,7 +40,12 @@ export default function SignUp() {
       setError(fieldErrors as Partial<SignUpInputState>);
       return;
     }
-    console.log(input);
+
+    // console.log(input);
+    const success = await signup(input);
+    if (success) {
+      navigate("/verify-email");
+    }
   };
 
   return (
@@ -155,6 +161,7 @@ export default function SignUp() {
         <div className="flex items-center justify-between">
           {loading ? (
             <Button
+              disabled
               className="w-full bg-orange hover:bg-hoverOrange text-white font-bold py-2 px-4 rounded "
               type="submit"
             >

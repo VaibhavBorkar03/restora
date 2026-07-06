@@ -2,18 +2,22 @@ import React, { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
+import { useNavigate } from "react-router-dom";
 
 export const VerifyEmail = () => {
-  const loading = false;
+  // const loading = false;
+
+  const navigate = useNavigate();
+  const { verifyEmail, loading } = useUserStore();
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
-  const inputRef = useRef<any>([]);
+  const inputRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleInputChange = (idx: number, value: string) => {
     if (/^[a-zA-Z0-9]$/.test(value) || value === "") {
       const newOtp = [...otp];
       newOtp[idx] = value;
       setOtp(newOtp);
-
     }
 
     //move to next input field
@@ -30,9 +34,24 @@ export const VerifyEmail = () => {
       inputRef.current[idx - 1]?.focus();
     }
   };
+
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const verificationCode = otp.join("");
+
+    // console.log("verificationCode", verificationCode);
+    const success = await verifyEmail(verificationCode);
+    if (success) {
+      navigate("/login");
+    }
+  };
   return (
     <div className="flex items-center justify-center h-screen ">
-      <form className="flex rounded-lg w-full flex-col gap-4 p-6 max-w-sm text-center border border-gray-100 shadow-lg">
+      <form
+        onSubmit={submitHandler}
+        className="flex rounded-lg w-full flex-col gap-4 p-6 max-w-sm text-center border border-gray-100 shadow-lg"
+      >
         <div>
           <h2 className="font-extrabold text-2xl">Verify Your Email</h2>
           <p className="text-sm text-gray-600">

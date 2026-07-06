@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Menubar,
   MenubarContent,
@@ -36,10 +36,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "../ui/separator";
+import { useUserStore } from "@/store/useUserStore";
 
 export const Navbar = () => {
-  const loading = false;
-  const admin = true;
+  const { user, logout, loading } = useUserStore();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response?.data?.success) {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between h-14 mx-4">
@@ -51,9 +60,9 @@ export const Navbar = () => {
         <div className="hidden md:flex items-center gap-14">
           <div className="hidden md:flex  items-center gap-6">
             <Link to="/">Home</Link>
-            <Link to="/">Profile</Link>
-            <Link to="/">Order</Link>
-            {admin && (
+            <Link to="/profile">Profile</Link>
+            <Link to="/order">Order</Link>
+            {user?.admin && (
               <Menubar>
                 <MenubarMenu>
                   <MenubarTrigger>Dashboard</MenubarTrigger>
@@ -115,7 +124,9 @@ export const Navbar = () => {
                   <Loader2 className="animate-spin" /> Please wait..
                 </Button>
               ) : (
-                <Button className="bg-orange w-full">Logout</Button>
+                <Button onClick={handleLogout} className="bg-orange w-full">
+                  Logout
+                </Button>
               )}
             </div>
           </div>
@@ -129,7 +140,14 @@ export const Navbar = () => {
 };
 
 const MobileNavbar = () => {
-  const loading = false;
+  const navigate = useNavigate();
+  const { user, logout, loading } = useUserStore();
+  const handleLogout = async () => {
+    const res = await logout();
+    if (res) {
+      navigate("/login");
+    }
+  };
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -188,27 +206,31 @@ const MobileNavbar = () => {
             <ShoppingCart />
             Cart
           </Link>
-          <Link
-            to="/admin/menu"
-            className="flex items-center gap-3 px-3 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
-          >
-            <Utensils />
-            Menu
-          </Link>
-          <Link
-            to="/admin/restaurent"
-            className="flex items-center gap-3 px-3 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
-          >
-            <Store />
-            Restaurent
-          </Link>
-          <Link
-            to="/admin/orders"
-            className="flex items-center gap-3 px-3 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
-          >
-            <Receipt />
-            Restaurent Order
-          </Link>
+          {user?.admin && (
+            <>
+              <Link
+                to="/admin/menu"
+                className="flex items-center gap-3 px-3 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <Utensils />
+                Menu
+              </Link>
+              <Link
+                to="/admin/restaurent"
+                className="flex items-center gap-3 px-3 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <Store />
+                Restaurent
+              </Link>
+              <Link
+                to="/admin/orders"
+                className="flex items-center gap-3 px-3 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <Receipt />
+                Restaurent Order
+              </Link>
+            </>
+          )}
         </SheetDescription>
 
         <SheetFooter>
@@ -230,7 +252,9 @@ const MobileNavbar = () => {
               <Loader2 className="animate-spin" /> Please wait..
             </Button>
           ) : (
-            <Button className="bg-orange w-full">Logout</Button>
+            <Button onClick={handleLogout} className="bg-orange w-full">
+              Logout
+            </Button>
           )}
         </SheetFooter>
       </SheetContent>

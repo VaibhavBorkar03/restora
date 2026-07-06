@@ -14,6 +14,11 @@ import { RestaurentScreen } from "./screens/admin/RestaurentScreen";
 import { AddMenuScreen } from "./screens/admin/AddMenuScreen";
 import RestaurentOrdersScreen from "./screens/admin/RestaurentOrdersScreen";
 import ClientOrdersScreen from "./screens/ClientOrdersScreen";
+import { AdminRoutes } from "./components/auth/AdminRoutes";
+import { PrivateRoutes } from "./components/auth/PrivateRoutes";
+import { useUserStore } from "./store/useUserStore";
+import { useEffect } from "react";
+import { AuthRoutes } from "./components/auth/AuthRoutes";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -21,25 +26,49 @@ function App() {
       path: "/",
       element: <MainLayout />,
       children: [
+        //public routes
         { index: true, element: <HomeScreen /> },
-        { path: "/profile", element: <ProfileScreen /> },
-        { path: "/search", element: <SearchScreen /> },
-        { path: "/restaurent/:id", element: <RestaurentDetailScreen /> },
-        { path: "/cart", element: <CartScreen /> },
-        { path: "/order", element: <ClientOrdersScreen /> },
+        {
+          element: <PrivateRoutes />,
+          children: [
+            { path: "/profile", element: <ProfileScreen /> },
+            { path: "/search", element: <SearchScreen /> },
+            { path: "/restaurent/:id", element: <RestaurentDetailScreen /> },
+            { path: "/cart", element: <CartScreen /> },
+            { path: "/order", element: <ClientOrdersScreen /> },
+          ],
+        },
 
         //admin routes
-        { path: "/admin/restaurent", element: <RestaurentScreen /> },
-        { path: "/admin/menu", element: <AddMenuScreen /> },
-        { path: "/admin/orders", element: <RestaurentOrdersScreen /> },
+        {
+          element: <AdminRoutes />,
+          children: [
+            { path: "/admin/restaurent", element: <RestaurentScreen /> },
+            { path: "/admin/menu", element: <AddMenuScreen /> },
+            { path: "/admin/orders", element: <RestaurentOrdersScreen /> },
+          ],
+        },
+        {
+          element: <AuthRoutes />,
+          children: [
+            { path: "/signup", element: <SignUp /> },
+            { path: "/login", element: <Login /> },
+            { path: "/forgot-password", element: <ForgotPassword /> },
+            { path: "/reset-password/:token", element: <ResetPassword /> },
+            { path: "/verify-email", element: <VerifyEmail /> },
+          ],
+        },
       ],
     },
-    { path: "/signup", element: <SignUp /> },
-    { path: "/login", element: <Login /> },
-    { path: "/forgot-password", element: <ForgotPassword /> },
-    { path: "/reset-password", element: <ResetPassword /> },
-    { path: "/verify-email", element: <VerifyEmail /> },
   ]);
+
+  const { checkAuthentication } = useUserStore();
+
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  // if (checkingAuth) return <p>Loading</p>;
   return (
     <>
       <RouterProvider router={appRouter} />
