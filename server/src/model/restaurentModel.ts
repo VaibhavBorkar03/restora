@@ -1,6 +1,5 @@
 import mongoose, { Types } from "mongoose";
 
-Types;
 export interface IRestaurent {
   user: Types.ObjectId;
   restaurentName: string;

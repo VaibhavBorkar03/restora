@@ -16,7 +16,7 @@ export const addMenu = async (req: Request, res: Response) => {
     }
 
     const image = await uploadImageOnCloudinary(file as Express.Multer.File);
-    const menu = await Menu.create({
+    const menu: any = await Menu.create({
       //push this menu to restaurent
       name,
       description,
@@ -44,9 +44,12 @@ export const addMenu = async (req: Request, res: Response) => {
 
 export const editMenu = async (req: Request, res: Response) => {
   try {
-    const { menuId } = req.params;
+    const menuId = req.params.id;
+    // console.log("menuId", menuId);
+
     const { name, description, price } = req.body;
     const file = req.file;
+    // console.log(" name, description, price", name, description, price);
 
     const menu = await Menu.findById(menuId);
 
@@ -69,7 +72,7 @@ export const editMenu = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: "Menu created successfully",
+      message: "Menu updated successfully",
       menu,
     });
   } catch (error) {

@@ -2,13 +2,17 @@ import { MailtrapClient } from "mailtrap";
 import dotenv from "dotenv";
 dotenv.config();
 
-const TOKEN = process.env.API_KEY;
+
 
 export const client = new MailtrapClient({
-  token: TOKEN!,
+  token: process.env.MAILTRAP_API_TOKEN!,
 });
 
+if (!process.env.MAILTRAP_API_TOKEN) {
+  throw new Error("MAILTRAP_API_TOKEN is missing in .env");
+}
+
 export const sender = {
-  email: "hello@demomailtrap.com",
-  name: "restora",
+  email: "hello@demomailtrap.co",
+  name: "Mailtrap Test",
 };

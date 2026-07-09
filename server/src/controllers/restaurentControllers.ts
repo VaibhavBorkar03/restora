@@ -6,8 +6,23 @@ import { Order } from "../model/orderModel.js";
 export const createRestaurent = async (req: Request, res: Response) => {
   try {
     const { restaurentName, city, country, deliveryTime, cuisines } = req.body;
+    // console.log(
+    //   "restaurentName, city, country, deliveryTime, cuisines",
+    //   restaurentName,
+    //   city,
+    //   country,
+    //   deliveryTime,
+    //   cuisines,
+    // );
+
     const file = req.file;
+    // console.log("image file", file);
+
+    // console.log(" req.id ", req.id);
+
     const restaurent = await Restaurent.findOne({ user: req.id });
+
+    // console.log("restaurent", restaurent);
 
     if (restaurent) {
       return res.status(404).json({
@@ -24,13 +39,19 @@ export const createRestaurent = async (req: Request, res: Response) => {
     }
 
     const imageUrl = await uploadImageOnCloudinary(file as Express.Multer.File);
+    // console.log("imageUrl", imageUrl);
+
+    const cuisinesArray = cuisines
+      .split(",")
+      .map((item: string) => item.trim());
+
     await Restaurent.create({
       user: req.id,
       restaurentName,
       city,
       country,
       deliveryTime,
-      cuisines: JSON.parse(cuisines),
+      cuisines: cuisinesArray,
       imageUrl,
     });
 
@@ -39,6 +60,7 @@ export const createRestaurent = async (req: Request, res: Response) => {
       message: "Restaurent created successfully",
     });
   } catch (error) {
+    console.log(error);
     throw new Error("Internal server error");
   }
 };
@@ -47,7 +69,7 @@ export const updateRestaurent = async (req: Request, res: Response) => {
   try {
     const { restaurentName, city, country, cuisines, deliveryTime } = req.body;
     const file = req.file;
-    if (file) {
+    if (!file) {
       return res.status(404).json({
         success: false,
         message: "Image file not exist",
@@ -55,6 +77,11 @@ export const updateRestaurent = async (req: Request, res: Response) => {
     }
 
     const restaurent = await Restaurent.findOne({ user: req.id });
+
+    const cuisinesArray = cuisines
+      .split(",")
+      .map((item: string) => item.trim());
+
     if (!restaurent) {
       return res.status(400).json({
         success: false,
@@ -65,7 +92,7 @@ export const updateRestaurent = async (req: Request, res: Response) => {
     restaurent.city = city;
     restaurent.country = country;
     restaurent.deliveryTime = deliveryTime;
-    restaurent.cuisines = JSON.parse(cuisines);
+    restaurent.cuisines = cuisinesArray;
 
     if (file) {
       const image = await uploadImageOnCloudinary(file as Express.Multer.File);
@@ -87,7 +114,9 @@ export const updateRestaurent = async (req: Request, res: Response) => {
 
 export const getRestaurent = async (req: Request, res: Response) => {
   try {
-    const restaurent = await Restaurent.findOne({ user: req.id });
+    const restaurent = await Restaurent.findOne({ user: req.id }).populate(
+      "menus",
+    );
     if (!restaurent) {
       return res.status(404).json({
         success: false,

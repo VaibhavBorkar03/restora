@@ -188,7 +188,7 @@ export const ResetSuccessEmail = (fullName: string) => {
               <td align="center">
 
                 <h1 style="color:#22c55e;">
-                  ✅ Password Updated Successfully
+                   Password Updated Successfully
                 </h1>
 
                 <h2 style="color:#333;">

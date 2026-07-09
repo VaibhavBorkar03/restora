@@ -13,12 +13,12 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(cookieParser());
+// app.use(bodyParser.json({ limit: "10mb" }));
 
 const corsOptions = {
-  origin: "http://localhost:5173/",
+  origin: "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -27,6 +27,7 @@ app.use(cors(corsOptions));
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/restaurant", restaurantRoutes);
 app.use("/api/v1/menu", menuRoutes);
+// http://localhost:8000//api/v1/user/signup
 
 const PORT = process.env.PORT || 8000;
 

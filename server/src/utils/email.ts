@@ -12,13 +12,15 @@ export const verificationEmail = async (
   verificationToken: string, //otp
 ) => {
   const recipient = [{ email }];
-  const verificatoionCode = verifyEmailHtml(verificationToken);
+  const verifyEmailHtm = verifyEmailHtml(verificationToken);
+  // console.log("verifyEmailHtm", verifyEmailHtm);
+
   try {
     const res = await client.send({
       from: sender,
       to: recipient,
       subject: "Verify your email",
-      html: verificatoionCode,
+      html: verifyEmailHtm,
       category: "Email verification",
     });
   } catch (error) {
