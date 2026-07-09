@@ -9,9 +9,8 @@ export const restaurentSchema = z.object({
     .min(0, { message: "Delivery time cannot be negative" }),
   cuisines: z.array(z.string()),
   imageFile: z
-    .instanceof(File)
-    .optional()
-    .refine((file) => file?.size !== 0, { message: "image is required" }),
+    .any()
+    .refine((file) => file instanceof File, { message: "image is required" }),
 });
 
 export type restaurenInputState = z.infer<typeof restaurentSchema>;

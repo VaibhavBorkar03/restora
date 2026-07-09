@@ -1,16 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import {
   restaurenInputState,
   restaurentSchema,
 } from "@/schema/restaurentSchema";
+import { useRestaurentStore } from "@/store/useRestaurentStore";
 import { Loader2 } from "lucide-react";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 
 export const RestaurentScreen = () => {
-  const restaurent = false;
+  // const restaurent = false;
   const loading = false;
+  const { createRestaurent, getRestaurent, updateRestaurent } =
+    useRestaurentStore();
+  const restaurent = useRestaurentStore((state) => state.restaurent);
+  // console.log("restaurent", restaurent);
 
   const [errors, setErrors] = useState<Partial<restaurenInputState>>({});
   const [input, setInput] = useState<restaurenInputState>({
@@ -19,7 +25,7 @@ export const RestaurentScreen = () => {
     country: "",
     deliveryTime: 0,
     cuisines: [],
-    imageFile: undefined,
+    imageFile: null,
   });
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +33,7 @@ export const RestaurentScreen = () => {
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = restaurentSchema.safeParse(input);
     if (!result.success) {
@@ -35,8 +41,48 @@ export const RestaurentScreen = () => {
       setErrors(fieldErrors as Partial<restaurenInputState>);
       return;
     }
-    console.log(input);
+    // console.log(input);
+    const formData = new FormData();
+    formData.append("restaurentName", input.restaurentName);
+    formData.append("city", input.city);
+    formData.append("country", input.country);
+    formData.append("deliveryTime", input.deliveryTime.toString());
+    formData.append(
+      "cuisines",
+      input.cuisines.map((item) => item.trim()).join(","),
+    );
+    if (input.imageFile) {
+      formData.append("imageFile", input.imageFile);
+    }
+
+    if (restaurent) {
+      await updateRestaurent(formData);
+    } else {
+      await createRestaurent(formData);
+    }
   };
+
+  useEffect(() => {
+    const fetchRestaurent = async () => {
+      await getRestaurent();
+      if (restaurent) {
+        // console.log(restaurent);
+
+        setInput({
+          restaurentName: restaurent.restaurentName || "",
+          city: restaurent.city || "",
+          country: restaurent.country || "",
+          deliveryTime: restaurent.deliveryTime.toString() || 0,
+          cuisines: restaurent.cuisines
+            ? restaurent.cuisines.map((cuisine: string) => cuisine)
+            : [],
+          imageFile: restaurent.imageUrl || null,
+        });
+      }
+    };
+    fetchRestaurent();
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto md:max-w-5xl">
       <div className="flex flex-col">
@@ -109,11 +155,18 @@ export const RestaurentScreen = () => {
             <div className="space-y-1">
               <Label>Cuisines</Label>
               <Input
-                type="number"
+                type="text"
                 name="cuisines"
-                value={input.cuisines}
+                // value={input.cuisines}
+                value={input.cuisines.join(", ")}
                 onChange={(e) =>
-                  setInput({ ...input, cuisines: e.target.value.split(",") })
+                  setInput({
+                    ...input,
+                    cuisines: e.target.value
+                      .split(",")
+                      .map((item) => item.trim())
+                      .filter(Boolean),
+                  })
                 }
                 placeholder="eg. Momos, Biryani"
               />
@@ -136,9 +189,9 @@ export const RestaurentScreen = () => {
                   })
                 }
               />
-              {errors && (
+              {errors.imageFile && (
                 <span className="font-semibold text-sm text-red-600">
-                  {errors.imageFile?.name}
+                  {errors.imageFile[0]}
                 </span>
               )}
             </div>

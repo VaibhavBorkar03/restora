@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { LoginInputState, SignUpInputState } from "@/schema/userSchema";
+import { SignUpInputState } from "@/schema/userSchema";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -21,13 +21,16 @@ type UserState = {
   isAuthenticated: boolean;
   checkingAuth: boolean;
   loading: boolean;
+  setUser: (user: User | null) => void;
+  setAuthenticated: (value: boolean) => void;
   signup: (input: SignUpInputState) => Promise<boolean>;
   verifyEmail: (verificationCode: string) => Promise<boolean>;
-  login: (input: LoginInputState) => Promise<boolean>;
-  logout: () => Promise<any>;
   checkAuthentication: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
+
+  // login: (input: LoginInputState) => Promise<boolean>;
+  // logout: () => Promise<any>;
 };
 
 export const useUserStore = create<UserState>()(
@@ -38,6 +41,12 @@ export const useUserStore = create<UserState>()(
       checkingAuth: true,
       loading: false,
 
+      setUser: (user) => {
+        set({ user });
+      },
+      setAuthenticated: (value) => {
+        set({ isAuthenticated: value });
+      },
       //api integration/implemention
       signup: async (input: SignUpInputState) => {
         try {
@@ -92,50 +101,50 @@ export const useUserStore = create<UserState>()(
         }
       },
 
-      login: async (input: LoginInputState) => {
-        try {
-          set({ loading: true });
-          const response = await api.post(`/api/v1/user/login`, input, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (response.data.success) {
-            // console.log("Response", response.data);
-            // console.log("Response user", response.data.user);
+      // login: async (input: LoginInputState) => {
+      //   try {
+      //     set({ loading: true });
+      //     const response = await api.post(`/api/v1/user/login`, input, {
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //     });
+      //     if (response.data.success) {
+      //       // console.log("Response", response.data);
+      //       // console.log("Response user", response.data.user);
 
-            toast.success(response.data.message);
-            set({
-              loading: false,
-              isAuthenticated: true,
-              user: response.data.user,
-            });
-            return true;
-          }
-          return false;
-          // return response;
-        } catch (error: any) {
-          set({ loading: false });
-          toast.error(error?.response?.data.message);
-          return false;
-        }
-      },
+      //       toast.success(response.data.message);
+      //       set({
+      //         loading: false,
+      //         isAuthenticated: true,
+      //         user: response.data.user,
+      //       });
+      //       return true;
+      //     }
+      //     return false;
+      //     // return response;
+      //   } catch (error: any) {
+      //     set({ loading: false });
+      //     toast.error(error?.response?.data.message);
+      //     return false;
+      //   }
+      // },
 
-      logout: async () => {
-        try {
-          set({ loading: true });
-          const response = await api.post(`/api/v1/user/logout`);
-          if (response.data.success) {
-            toast.success(response.data.message);
-            set({ loading: false, isAuthenticated: false, user: null });
-          }
-          return response;
-        } catch (error: any) {
-          set({ loading: false });
-          toast.error(error.response.data.message);
-          return false;
-        }
-      },
+      // logout: async () => {
+      //   try {
+      //     set({ loading: true });
+      //     const response = await api.post(`/api/v1/user/logout`);
+      //     if (response.data.success) {
+      //       toast.success(response.data.message);
+      //       set({ loading: false, isAuthenticated: false, user: null });
+      //     }
+      //     return response;
+      //   } catch (error: any) {
+      //     set({ loading: false });
+      //     toast.error(error.response.data.message);
+      //     return false;
+      //   }
+      // },
 
       checkAuthentication: async () => {
         try {

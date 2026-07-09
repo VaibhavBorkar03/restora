@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { LoginInputState, loginSchema } from "@/schema/userSchema";
 import { useUserStore } from "@/store/useUserStore";
+import api from "@/lib/axios";
+import { toast } from "sonner";
 
 export default function Login() {
   // type LoginInputState = {
@@ -15,11 +17,11 @@ export default function Login() {
   // };
 
   const navigate = useNavigate();
+  const { setUser, setAuthenticated, loading } = useUserStore();
   const [input, setInput] = useState<LoginInputState>({
     email: "",
     password: "",
   });
-  const { login, loading } = useUserStore();
 
   const [error, setError] = useState<Partial<LoginInputState>>({});
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,9 +37,20 @@ export default function Login() {
       setError(fieldErrors as Partial<LoginInputState>);
       return;
     }
-
-    await login(input);
-    navigate("/");
+    try {
+      const response = await api.post(`/api/v1/user/login`, input, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.data.success) {
+        // await login(input);
+        toast.success(response?.data?.message);
+        setUser(response.data.user);
+        setAuthenticated(true);
+        navigate("/");
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
+    }
   };
 
   return (

@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { menuFormState, menuSchema } from "@/schema/menuSchema";
+import { useMenuStore } from "@/store/useMenuStore";
 import {
   ChangeEvent,
   Dispatch,
@@ -34,8 +35,10 @@ export const EditMenuDialog = ({
     price: 0,
     image: null,
   });
-
+  const { editMenu } = useMenuStore();
   const [errors, setErrors] = useState<Partial<menuFormState>>();
+
+  // console.log("selectedMenu", selectedMenu);
 
   useEffect(() => {
     setInput({
@@ -50,7 +53,7 @@ export const EditMenuDialog = ({
     const { type, name, value } = e.target;
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = menuSchema.safeParse(input);
     if (!result.success) {
@@ -58,7 +61,14 @@ export const EditMenuDialog = ({
       setErrors(fieldErrors as Partial<menuFormState>);
       return;
     }
-    console.log(input);
+    // console.log(input);
+    const formData = new FormData();
+    formData.append("name", input.name);
+    formData.append("description", input.description);
+    formData.append("price", input.price.toString());
+    formData.append("image", input.image);
+
+    await editMenu(selectedMenu?._id, formData);
   };
 
   return (

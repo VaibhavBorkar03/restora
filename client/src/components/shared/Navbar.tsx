@@ -37,15 +37,27 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "../ui/separator";
 import { useUserStore } from "@/store/useUserStore";
+import api from "@/lib/axios";
+import { toast } from "sonner";
 
 export const Navbar = () => {
-  const { user, logout, loading } = useUserStore();
+  const { user, setUser, setAuthenticated, loading } = useUserStore();
   const navigate = useNavigate();
 
+  // console.log(user);
+
   const handleLogout = async () => {
-    const response = await logout();
-    if (response?.data?.success) {
-      navigate("/login");
+    try {
+      const response = await api.post(`/api/v1/user/logout`);
+      if (response.data.success) {
+        setUser(null);
+        setAuthenticated(false);
+
+        toast.success(response.data.message);
+        navigate("/login");
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -140,12 +152,20 @@ export const Navbar = () => {
 };
 
 const MobileNavbar = () => {
+  const { user, setUser, setAuthenticated, loading } = useUserStore();
   const navigate = useNavigate();
-  const { user, logout, loading } = useUserStore();
   const handleLogout = async () => {
-    const res = await logout();
-    if (res) {
-      navigate("/login");
+    try {
+      const response = await api.post(`/api/v1/user/logout`);
+      if (response.data.success) {
+        setUser(null);
+        setAuthenticated(false);
+
+        toast.success(response.data.message);
+        navigate("/login");
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
   return (

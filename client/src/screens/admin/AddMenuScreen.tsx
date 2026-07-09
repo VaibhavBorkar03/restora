@@ -13,31 +13,33 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { EditMenuDialog } from "./EditMenuDialog";
 import { menuFormState, menuSchema } from "@/schema/menuSchema";
+import { useMenuStore } from "@/store/useMenuStore";
+import { useRestaurentStore } from "@/store/useRestaurentStore";
 
-const menus = [
-  {
-    name: "chicken tikka",
-    description: "chicken tiika is a superb indian dish",
-    price: 120,
-    image:
-      "https://cdn.britannica.com/40/177340-050-2F922898/Chicken-tikka-masala.jpg",
-  },
+// const menus = [
+//   {
+//     name: "chicken tikka",
+//     description: "chicken tiika is a superb indian dish",
+//     price: 120,
+//     image:
+//       "https://cdn.britannica.com/40/177340-050-2F922898/Chicken-tikka-masala.jpg",
+//   },
 
-  {
-    name: "biryani",
-    description: "biryani is a superb indian dish",
-    price: 160,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRu6ItKaZRurjdLym0LecokMuCZDOPwPSJQobty-WEP8DXCg41tfpOqbgWj&s=10",
-  },
-  {
-    name: "manchurian rice",
-    description: "manchurian rice is a superb indian dish",
-    price: 90,
-    image:
-      "https://intelligentfoods.ae/cdn/shop/files/chicken-8df7443b3619054bfff7d3f4cb8d30b7.jpg?v=1715942239&width=1020",
-  },
-];
+//   {
+//     name: "biryani",
+//     description: "biryani is a superb indian dish",
+//     price: 160,
+//     image:
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRu6ItKaZRurjdLym0LecokMuCZDOPwPSJQobty-WEP8DXCg41tfpOqbgWj&s=10",
+//   },
+//   {
+//     name: "manchurian rice",
+//     description: "manchurian rice is a superb indian dish",
+//     price: 90,
+//     image:
+//       "https://intelligentfoods.ae/cdn/shop/files/chicken-8df7443b3619054bfff7d3f4cb8d30b7.jpg?v=1715942239&width=1020",
+//   },
+// ];
 
 export const AddMenuScreen = () => {
   const [input, setInput] = useState<menuFormState>({
@@ -46,6 +48,10 @@ export const AddMenuScreen = () => {
     price: 0,
     image: null,
   });
+
+  const { addMenu } = useMenuStore();
+  const restaurent = useRestaurentStore((state) => state.restaurent);
+  // console.log("restaurent menu", restaurent);
 
   const [editMenuOpen, setEditMenuOpen] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<any>();
@@ -56,7 +62,7 @@ export const AddMenuScreen = () => {
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = menuSchema.safeParse(input);
     if (!result.success) {
@@ -64,8 +70,20 @@ export const AddMenuScreen = () => {
       setErrors(fieldErrors as Partial<menuFormState>);
       return;
     }
-    console.log(input);
+
+    try {
+      const formData = new FormData();
+      formData.append("name", input.name);
+      formData.append("description", input.description);
+      formData.append("price", input.price.toString());
+      formData.append("image", input.image);
+
+      await addMenu(formData);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <div className="max-w-7xl mx-auto md:max-w-6xl md:my-2">
       <div className="flex flex-col">
@@ -140,13 +158,13 @@ export const AddMenuScreen = () => {
                       onChange={(e) =>
                         setInput({
                           ...input,
-                          image: e.target.files?.[0] || null,
+                          image: e.target.files?.[0],
                         })
                       }
                     />
                     {errors && (
                       <span className="text-sm text-red-500 font-semibold">
-                        {errors.image?.name || "image is required"}
+                        {errors.image?.name}
                       </span>
                     )}
                   </div>
@@ -158,12 +176,13 @@ export const AddMenuScreen = () => {
             </Dialog>
           </div>
         </div>
+
         <div className="grid gap-4 md:grid-cols-3 p-1 py-4">
-          {menus.map((menu: any, idx: number) => (
+          {restaurent?.menus?.map((menu: any, idx: number) => (
             <div key={idx}>
               <div className="shadow-md rounded-lg ">
                 <img
-                  src={menu.image}
+                  src={menu?.image}
                   alt=""
                   className="object-cover w-full h-32 p-1 rounded-lg"
                 />
