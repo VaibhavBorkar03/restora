@@ -1,50 +1,8 @@
 import api from "@/lib/axios";
+import { MenuItem, RestaurentState } from "@/types/restaurentTypes";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-type MenuItem = {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-};
-
-type Restaurent = {
-  _id: string;
-  restaurentName: string;
-  user: string;
-  city: string;
-  country: string;
-  deliveryTime: number;
-  menus: MenuItem[];
-  imageUrl: string;
-  cuisines: string[];
-};
-
-type searchItems = {
-  data: Restaurent[];
-};
-
-type RestaurentState = {
-  restaurent: Restaurent | null;
-  searchItems: searchItems | null;
-  appliedFilter: string[];
-  createRestaurent: (formData: FormData) => Promise<void>;
-  updateRestaurent: (formData: FormData) => Promise<void>;
-  getRestaurent: () => Promise<void>;
-  getRestaurentById: (restaurentId: string) => Promise<void>;
-  addMenuToRestaurent: (menu: MenuItem) => void;
-  updateMenuToRestaurent: (updatedMenu: MenuItem) => void;
-  searchRestaurent: (
-    searchText: string,
-    searchQuery: string,
-    selectedCuisine: any,
-  ) => Promise<void>;
-  setAppliedFilter: (value: string) => void;
-  resetAppliedFilter: () => void;
-};
 
 export const useRestaurentStore = create<RestaurentState>()(
   persist(
@@ -52,6 +10,7 @@ export const useRestaurentStore = create<RestaurentState>()(
       restaurent: null,
       searchItems: null,
       appliedFilter: [],
+      singleRestaurent: null,
       //create restaurent
       createRestaurent: async (formData: FormData) => {
         try {
@@ -94,14 +53,14 @@ export const useRestaurentStore = create<RestaurentState>()(
         }
       },
 
-      getRestaurentById: async (restaurentId: string) => {
+      getRestaurentById: async (id: string) => {
         try {
-          const response = await api.get(`/api/v1/restaurant/${restaurentId}`);
+          const response = await api.get(`/api/v1/restaurant/${id}`);
           if (response.data.success) {
-            console.log(response.data);
+            set({ singleRestaurent: response.data.restaurent });
           }
         } catch (error: any) {
-          toast.error(error);
+          toast.error(error.response.data.message);
         }
       },
 
@@ -168,8 +127,6 @@ export const useRestaurentStore = create<RestaurentState>()(
       resetAppliedFilter: () => {
         set({ appliedFilter: [] });
       },
-
-      
     }),
     {
       name: "restaurent-storage",

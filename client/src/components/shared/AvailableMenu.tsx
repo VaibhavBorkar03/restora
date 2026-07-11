@@ -1,15 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
-import { useRestaurentStore } from "@/store/useRestaurentStore";
+import { MenuItem } from "@/types/restaurentTypes";
 
-export const AvailableMenu = () => {
-  const restaurent = useRestaurentStore((state) => state.restaurent);
-  // console.log("available menus", restaurent);
+export const AvailableMenu = ({ menus }: { menus: MenuItem[] }) => {
   const navigate = useNavigate();
   return (
     <div className="grid md:grid-cols-3 gap-4 my-4 ">
-      {restaurent?.menus?.map((menu:any, idx: number) => (
+      {menus?.map((menu: any, idx: number) => (
         <Card className="shadow-lg border border-none" key={idx}>
           <img
             src={menu?.image}
@@ -18,9 +16,7 @@ export const AvailableMenu = () => {
           />
           <CardContent className="p-2 space-y-1">
             <h1 className="font-bold text-2xl">{menu?.name}</h1>
-            <p className="text-gray-500">
-             {menu?.description}
-            </p>
+            <p className="text-gray-500">{menu?.description}</p>
             <h2 className="font-bold text-xl">
               Price : <span className="text-orange">{menu.price}</span>
             </h2>
