@@ -168,6 +168,8 @@ export const useRestaurentStore = create<RestaurentState>()(
       resetAppliedFilter: () => {
         set({ appliedFilter: [] });
       },
+
+      
     }),
     {
       name: "restaurent-storage",

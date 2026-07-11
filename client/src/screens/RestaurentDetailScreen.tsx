@@ -7,14 +7,14 @@ import { useParams } from "react-router-dom";
 
 export const RestaurentDetailScreen = () => {
   const restaurent = useRestaurentStore((state) => state.restaurent);
-  const { restaurentId } = useParams();
-  const { getRestaurentById } = useRestaurentStore();
+  // const { restaurentId } = useParams();
+  // const { getRestaurentById } = useRestaurentStore();
 
   // const { getRestaurent } = useRestaurentStore();
 
-  useEffect(() => {
-    getRestaurentById(restaurentId);
-  }, [restaurentId]);
+  // useEffect(() => {
+  //   getRestaurentById(restaurentId);
+  // }, [restaurentId]);
 
   return (
     <div className="max-w-7xl mx-auto my-8">

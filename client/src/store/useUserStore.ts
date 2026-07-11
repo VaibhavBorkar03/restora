@@ -5,6 +5,8 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 type User = {
+  //ts -> is used to set the shape of your data or fields
+  //we set the type of user that  is came from backend
   fullname: string;
   email: string;
   contact: Number;
@@ -17,6 +19,7 @@ type User = {
 };
 
 type UserState = {
+  //this define the type of this glbal store
   user: User | null;
   isAuthenticated: boolean;
   checkingAuth: boolean;
@@ -28,6 +31,7 @@ type UserState = {
   checkAuthentication: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
+  updateProfile: (formData: FormData) => Promise<void>;
 
   // login: (input: LoginInputState) => Promise<boolean>;
   // logout: () => Promise<any>;
@@ -195,6 +199,25 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           set({ loading: false });
+          toast.error(error.response.data.message);
+        }
+      },
+
+      updateProfile: async (formData: FormData) => {
+        try {
+          const response = await api.put(
+            `/api/v1/user/profile/update`,
+            formData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            },
+          );
+          if (response.data.success) {
+            // console.log("update", response.data);
+            toast.success(response.data.message);
+            set({ user: response.data.user });
+          }
+        } catch (error: any) {
           toast.error(error.response.data.message);
         }
       },
