@@ -32,7 +32,7 @@ function App() {
           element: <PrivateRoutes />,
           children: [
             { path: "/profile", element: <ProfileScreen /> },
-            { path: "/search", element: <SearchScreen /> },
+            { path: "/search/:searchText", element: <SearchScreen /> },
             { path: "/restaurent/:id", element: <RestaurentDetailScreen /> },
             { path: "/cart", element: <CartScreen /> },
             { path: "/order", element: <ClientOrdersScreen /> },

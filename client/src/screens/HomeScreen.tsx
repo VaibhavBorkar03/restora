@@ -3,8 +3,10 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import HeroImage from "@/assets/burger.jpg";
+import { useNavigate } from "react-router-dom";
 
 const HomeScreen = () => {
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState<string>("");
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:p-10 items-center justify-center mt-6">
@@ -26,7 +28,12 @@ const HomeScreen = () => {
             className="pl-10 w-full shadow-md"
           />
           <Search className="absolute inset-y-2 left-2" />
-          <Button className="bg-orange hover:bg-hoverOrange h-9">Search</Button>
+          <Button
+            onClick={() => navigate(`/search/${searchText}`)}
+            className="bg-orange hover:bg-hoverOrange h-9"
+          >
+            Search
+          </Button>
         </div>
       </div>
       <div>

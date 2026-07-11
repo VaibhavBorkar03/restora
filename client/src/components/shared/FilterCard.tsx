@@ -1,3 +1,4 @@
+import { useRestaurentStore } from "@/store/useRestaurentStore";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -13,15 +14,20 @@ const filterdOption: FilterTypeState[] = [
   { id: "mutton", label: "mutton" },
   { id: "chicken", label: "chicken" },
 ];
+
 export const FilterCard = () => {
+  const { appliedFilter, setAppliedFilter, resetAppliedFilter } =
+    useRestaurentStore();
   const filterHandler = (value: string) => {
-    alert(value)
+    setAppliedFilter(value);
   };
   return (
     <div className="md:w-72">
       <div className=" flex justify-between items-center">
         <h1 className="font-medium text-lg">Filter by cousins</h1>
-        <Button className="bg-orange">Reset</Button>
+        <Button onClick={resetAppliedFilter} className="bg-orange">
+          Reset
+        </Button>
       </div>
       {filterdOption.map((option) => (
         <div
@@ -30,6 +36,7 @@ export const FilterCard = () => {
         >
           <Checkbox
             id={option.id}
+            checked={appliedFilter.includes(option.label)}
             onClick={() => filterHandler(option.label)}
           />
           <Label className="text-sm font-medium leading-none ">

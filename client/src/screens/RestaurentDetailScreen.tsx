@@ -3,15 +3,18 @@ import { Badge } from "@/components/ui/badge";
 import { useRestaurentStore } from "@/store/useRestaurentStore";
 import { Timer } from "lucide-react";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export const RestaurentDetailScreen = () => {
   const restaurent = useRestaurentStore((state) => state.restaurent);
+  const { restaurentId } = useParams();
+  const { getRestaurentById } = useRestaurentStore();
 
-  const { getRestaurent } = useRestaurentStore();
+  // const { getRestaurent } = useRestaurentStore();
 
   useEffect(() => {
-    getRestaurent();
-  }, [getRestaurent]);
+    getRestaurentById(restaurentId);
+  }, [restaurentId]);
 
   return (
     <div className="max-w-7xl mx-auto my-8">
