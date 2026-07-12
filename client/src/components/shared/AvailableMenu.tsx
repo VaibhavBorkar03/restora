@@ -2,13 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { MenuItem } from "@/types/restaurentTypes";
+import { useCartStore } from "@/store/useCartStore";
 
 export const AvailableMenu = ({ menus }: { menus: MenuItem[] }) => {
+  const { addToCart } = useCartStore();
   const navigate = useNavigate();
   return (
     <div className="grid md:grid-cols-3 gap-4 my-4 ">
-      {menus?.map((menu: any, idx: number) => (
-        <Card className="shadow-lg border border-none" key={idx}>
+      {menus?.map((menu: MenuItem) => (
+        <Card className="shadow-lg border border-none" key={menu._id}>
           <img
             src={menu?.image}
             alt="dosa"
@@ -23,7 +25,10 @@ export const AvailableMenu = ({ menus }: { menus: MenuItem[] }) => {
           </CardContent>
           <CardFooter className="p-4">
             <Button
-              onClick={() => navigate(`/cart`)}
+              onClick={() => {
+                addToCart(menu);
+                navigate(`/cart`);
+              }}
               className="bg-orange w-full hover:bg-hoverOrange"
             >
               Add to Cart

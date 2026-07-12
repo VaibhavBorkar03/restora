@@ -10,6 +10,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
+import { useUserStore } from "@/store/useUserStore";
 
 export const CheckoutDialog = ({
   open,
@@ -18,13 +19,14 @@ export const CheckoutDialog = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { user } = useUserStore();
   const [input, setInput] = useState({
-    name: "",
-    email: "",
-    contact: "",
-    address: "",
-    city: "",
-    country: "",
+    name: user?.fullname || "",
+    email: user?.email || "",
+    contact: user?.contact.toString() || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    country: user?.country || "",
   });
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +68,7 @@ export const CheckoutDialog = ({
             <Label className="mb-2">Email</Label>
             <Input
               type="email"
+              disabled
               placeholder="Enter Email"
               name="email"
               value={input.email}
@@ -75,7 +78,7 @@ export const CheckoutDialog = ({
           <div>
             <Label className="mb-2">Contact</Label>
             <Input
-              type="text"
+              type="number"
               placeholder="Enter Contact"
               name="contact"
               value={input.contact}

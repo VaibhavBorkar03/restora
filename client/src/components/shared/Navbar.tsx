@@ -39,11 +39,13 @@ import { Separator } from "../ui/separator";
 import { useUserStore } from "@/store/useUserStore";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { useCartStore } from "@/store/useCartStore";
 
 export const Navbar = () => {
   const { user, setUser, setAuthenticated, loading } = useUserStore();
   const navigate = useNavigate();
-
+  const { cart } = useCartStore();
+  console.log("cart", cart);
   // console.log(user);
 
   const handleLogout = async () => {
@@ -117,8 +119,13 @@ export const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <Link to="/cart">
+            <Link to="/cart" className="relative">
               <ShoppingCart />
+              {cart.length > 0 && (
+                <Button className="absolute -top-1 -right-3  flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                  {cart.length}
+                </Button>
+              )}
             </Link>
             <div>
               <Avatar>
