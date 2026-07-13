@@ -201,8 +201,8 @@ export const searchRestaurent = async (req: Request, res: Response) => {
 
     if (searchQuery) {
       query.$or = [
-        { restaurentName: { $regex: searchText, $options: "i" } },
-        { cuisines: { $regex: searchQuery, options: "i" } },
+        { restaurentName: { $regex: searchQuery, $options: "i" } },
+        { cuisines: { $regex: searchQuery, $options: "i" } },
       ];
     }
 
@@ -213,10 +213,31 @@ export const searchRestaurent = async (req: Request, res: Response) => {
     const restaurent = await Restaurent.find(query);
     return res.status(200).json({
       success: true,
-      restaurent,
+      data: restaurent,
     });
   } catch (error) {
     console.log(error);
     throw new Error("Internal server error");
+  }
+};
+
+export const getRestaurentById = async (req: Request, res: Response) => {
+  try {
+    const restaurentId = req.params.id;
+    const restaurent =
+      await Restaurent.findById(restaurentId).populate("menus");
+    if (!restaurent) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurent not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      restaurent,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };

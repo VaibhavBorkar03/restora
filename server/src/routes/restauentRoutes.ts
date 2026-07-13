@@ -4,6 +4,7 @@ import upload from "../middleware/multer.js";
 import {
   createRestaurent,
   getRestaurent,
+  getRestaurentById,
   getRestaurentOrders,
   searchRestaurent,
   updateOrderStatus,
@@ -17,6 +18,8 @@ router
   .post(isAuthenticated, upload.single("imageFile"), createRestaurent)
   .get(isAuthenticated, getRestaurent)
   .put(isAuthenticated, upload.single("imageFile"), updateRestaurent);
+
+router.route("/:id").get(isAuthenticated, getRestaurentById);
 
 router.route("/orders").get(isAuthenticated, getRestaurentOrders);
 router.route("/order/:id/status").put(isAuthenticated, updateOrderStatus);

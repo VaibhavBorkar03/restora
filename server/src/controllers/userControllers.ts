@@ -11,6 +11,8 @@ import {
   sendWelcomeEmail,
   verificationEmail,
 } from "../utils/email.js";
+import uploadImageOnCloudinary from "../utils/uploadImageOnCloudinary.js";
+import { Multer } from "multer";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -273,22 +275,28 @@ export const checkAuth = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.id;
-    const { fullname, email, address, city, country, profilePicture } =
-      req.body;
+    const { fullname, email, address, city, country } = req.body;
+    const profilePicture = req.file;
+
+    if (!profilePicture) {
+      console.log("profilePicture not come");
+    }
 
     //cloudinary
-    const cloudResponse = await cloudinary.uploader.upload(profilePicture);
+    const cloudResponse = await uploadImageOnCloudinary(
+      profilePicture as Express.Multer.File,
+    );
     const updateData = {
       fullname,
       email,
       address,
       city,
       country,
-      profilePicture: cloudResponse.secure_url,
+      profilePicture: cloudResponse,
     };
 
     const user = await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
+      returnDocument: "after",
     }).select("-password");
 
     return res.status(200).json({
