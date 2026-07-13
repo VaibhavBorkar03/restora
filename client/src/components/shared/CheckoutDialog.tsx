@@ -11,6 +11,10 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { useUserStore } from "@/store/useUserStore";
+import { CheckoutSessionRequest } from "@/types/orderTypes";
+import { useOrderStore } from "@/store/useOrderStore";
+import { useRestaurentStore } from "@/store/useRestaurentStore";
+import { useCartStore } from "@/store/useCartStore";
 
 export const CheckoutDialog = ({
   open,
@@ -19,6 +23,9 @@ export const CheckoutDialog = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { createCheckoutSession } = useOrderStore();
+  const { restaurent } = useRestaurentStore();
+  const { cart } = useCartStore();
   const { user } = useUserStore();
   const [input, setInput] = useState({
     name: user?.fullname || "",
@@ -34,9 +41,28 @@ export const CheckoutDialog = ({
     setInput({ ...input, [name]: value });
   };
 
-  const chackoutHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const chackoutHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
+
+    try {
+      const checkoutData: CheckoutSessionRequest = {
+        cartItems: cart.map((cartItem) => ({
+          menuId: cartItem._id,
+          price: cartItem.price.toString(),
+          quantity: cartItem.price,
+          image: cartItem.image,
+          name: cartItem.name,
+        })),
+        deliveryDetails: input,
+        restaurentId: restaurent?._id as string,
+      };
+
+      console.log("checkoutData", checkoutData);
+
+      await createCheckoutSession(checkoutData);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>

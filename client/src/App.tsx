@@ -36,6 +36,7 @@ function App() {
             { path: "/restaurent/:id", element: <RestaurentDetailScreen /> },
             { path: "/cart", element: <CartScreen /> },
             { path: "/order", element: <ClientOrdersScreen /> },
+            { path: "/order/status", element: <ClientOrdersScreen /> },
           ],
         },
 

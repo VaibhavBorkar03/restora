@@ -29,6 +29,9 @@ export const CartScreen = () => {
     return acc + ele.price * ele.quantity;
   }, 0);
   const [open, setOpen] = useState<boolean>(false);
+
+
+  
   return (
     <div className="max-w-7xl mx-auto ">
       <div className="flex flex-col gap-2">
