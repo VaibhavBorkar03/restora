@@ -28,5 +28,5 @@ export type OrderState = {
   createCheckoutSession: (
     checkoutSession: CheckoutSessionRequest,
   ) => Promise<void>;
-  //   getOrderDetails: () => void;
+  getOrderDetails: () => Promise<void>;
 };

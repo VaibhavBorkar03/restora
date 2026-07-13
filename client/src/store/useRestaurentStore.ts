@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { Order } from "@/types/orderTypes";
 import { MenuItem, RestaurentState } from "@/types/restaurentTypes";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -6,11 +7,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 export const useRestaurentStore = create<RestaurentState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       restaurent: null,
       searchItems: null,
       appliedFilter: [],
       singleRestaurent: null,
+      restaurentOrders: [],
       //create restaurent
       createRestaurent: async (formData: FormData) => {
         try {
@@ -126,6 +128,41 @@ export const useRestaurentStore = create<RestaurentState>()(
 
       resetAppliedFilter: () => {
         set({ appliedFilter: [] });
+      },
+
+      getRestaurentOrders: async () => {
+        try {
+          const response = await api.get(`/api/v1/restaurant/orders`);
+          if (response.data.success) {
+            set({ restaurentOrders: response.data.orders });
+          }
+        } catch (error: any) {
+          toast.error(error);
+        }
+      },
+
+      updateOrderStatus: async (orderId: string, status: string) => {
+        try {
+          const response = await api.put(
+            `/api/v1/restaurant/order/${orderId}/status`,
+            { status },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          );
+          if (response.data.success) {
+            const updatedOrder = get().restaurentOrders.map((order: Order) => {
+              return order._id === orderId
+                ? { ...order, status: response.data.status }
+                : order;
+            });
+            set({ restaurentOrders: updatedOrder });
+          }
+        } catch (error: any) {
+          toast.error(error);
+        }
       },
     }),
     {

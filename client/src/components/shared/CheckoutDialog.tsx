@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
@@ -25,7 +25,7 @@ export const CheckoutDialog = ({
 }) => {
   const { createCheckoutSession } = useOrderStore();
   const { restaurent } = useRestaurentStore();
-  const { cart } = useCartStore();
+  const { cart,  } = useCartStore();
   const { user } = useUserStore();
   const [input, setInput] = useState({
     name: user?.fullname || "",
@@ -49,7 +49,7 @@ export const CheckoutDialog = ({
         cartItems: cart.map((cartItem) => ({
           menuId: cartItem._id,
           price: cartItem.price.toString(),
-          quantity: cartItem.price,
+          quantity: cartItem.quantity,
           image: cartItem.image,
           name: cartItem.name,
         })),
@@ -64,6 +64,8 @@ export const CheckoutDialog = ({
       console.log(error);
     }
   };
+
+ 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="bg-white">

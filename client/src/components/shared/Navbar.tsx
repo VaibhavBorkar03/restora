@@ -45,7 +45,7 @@ export const Navbar = () => {
   const { user, setUser, setAuthenticated, loading } = useUserStore();
   const navigate = useNavigate();
   const { cart } = useCartStore();
-  console.log("cart", cart);
+  // console.log("cart", cart);
   // console.log(user);
 
   const handleLogout = async () => {
@@ -130,7 +130,7 @@ export const Navbar = () => {
             <div>
               <Avatar>
                 <AvatarImage
-                  src="https://github.com/shadcn.png"
+                  src={"https://github.com/shadcn.png"}
                   alt="@shadcn"
                   className="grayscale"
                 />

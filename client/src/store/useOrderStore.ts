@@ -28,7 +28,14 @@ export const useOrderStore = create<OrderState>()(
           console.log(error);
         }
       },
-      //   getOrderDetails: () => {},
+      getOrderDetails: async () => {
+        try {
+          const response = await api.get(`/api/v1/order`);
+          set({ orders: response.data.orders });
+        } catch (error: any) {
+          toast.error(error.response.data.message);
+        }
+      },
     }),
     {
       name: "order-storage",

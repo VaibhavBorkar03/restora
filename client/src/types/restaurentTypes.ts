@@ -1,3 +1,5 @@
+import { Order } from "./orderTypes";
+
 export interface MenuItem {
   _id: string;
   name: string;
@@ -27,6 +29,7 @@ export type RestaurentState = {
   searchItems: searchItems | null;
   appliedFilter: string[];
   singleRestaurent: Restaurent | null;
+  restaurentOrders: Order[];
   createRestaurent: (formData: FormData) => Promise<void>;
   updateRestaurent: (formData: FormData) => Promise<void>;
   getRestaurent: () => Promise<void>;
@@ -40,4 +43,6 @@ export type RestaurentState = {
   ) => Promise<void>;
   setAppliedFilter: (value: string) => void;
   resetAppliedFilter: () => void;
+  getRestaurentOrders: () => Promise<void>;
+  updateOrderStatus: (orderId: string, status: string) => Promise<void>;
 };
