@@ -57,8 +57,6 @@ export const CheckoutDialog = ({
         restaurentId: restaurent?._id as string,
       };
 
-      console.log("checkoutData", checkoutData);
-
       await createCheckoutSession(checkoutData);
     } catch (error) {
       console.log(error);

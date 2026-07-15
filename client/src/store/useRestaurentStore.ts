@@ -108,7 +108,7 @@ export const useRestaurentStore = create<RestaurentState>()(
             `/api/v1/restaurant/search/${searchText}?${params.toString()}`,
           );
           if (response.data.success) {
-            // console.log(r1", response.data);
+            
             set({ searchItems: response.data });
           }
         } catch (error: any) {

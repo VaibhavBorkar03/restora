@@ -19,8 +19,11 @@ import { PrivateRoutes } from "./components/auth/PrivateRoutes";
 import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
 import { AuthRoutes } from "./components/auth/AuthRoutes";
+import { useThemeStore } from "./store/useThemeStore";
 
 function App() {
+  const theme = useThemeStore((state) => state.theme);
+
   const appRouter = createBrowserRouter([
     {
       path: "/",
@@ -68,6 +71,11 @@ function App() {
   useEffect(() => {
     checkAuthentication();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(theme);
+  }, [theme]);
 
   // if (checkingAuth) return <p>Loading</p>;
   return (

@@ -9,7 +9,8 @@ import React, { FormEvent, useRef, useState } from "react";
 export const ProfileScreen = () => {
   const loading = false;
   const { user, updateProfile } = useUserStore();
-  // console.log(user);
+  
+
 
   const [profileData, setProfileData] = useState({
     fullname: user?.fullname || "",
@@ -62,7 +63,7 @@ export const ProfileScreen = () => {
     }
     await updateProfile(formData);
 
-    // console.log(profileData);
+    
   };
 
   return (

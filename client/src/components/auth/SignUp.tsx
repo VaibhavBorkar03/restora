@@ -41,7 +41,7 @@ export default function SignUp() {
       return;
     }
 
-    // console.log(input);
+    
     const success = await signup(input);
     if (success) {
       navigate("/verify-email");

@@ -38,7 +38,7 @@ export const EditMenuDialog = ({
   const { editMenu } = useMenuStore();
   const [errors, setErrors] = useState<Partial<menuFormState>>();
 
-  // console.log("selectedMenu", selectedMenu);
+  
 
   useEffect(() => {
     setInput({
@@ -61,7 +61,7 @@ export const EditMenuDialog = ({
       setErrors(fieldErrors as Partial<menuFormState>);
       return;
     }
-    // console.log(input);
+    
     const formData = new FormData();
     formData.append("name", input.name);
     formData.append("description", input.description);

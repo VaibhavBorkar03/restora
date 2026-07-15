@@ -61,7 +61,7 @@ export const useUserStore = create<UserState>()(
             },
           });
           if (response.data.success) {
-            // console.log("SIGNUP", response.data);
+            
             toast.success(response.data.message);
             set({
               loading: false,
@@ -114,8 +114,7 @@ export const useUserStore = create<UserState>()(
       //       },
       //     });
       //     if (response.data.success) {
-      //       // console.log("Response", response.data);
-      //       // console.log("Response user", response.data.user);
+      
 
       //       toast.success(response.data.message);
       //       set({
@@ -213,7 +212,7 @@ export const useUserStore = create<UserState>()(
             },
           );
           if (response.data.success) {
-            // console.log("update", response.data);
+            
             toast.success(response.data.message);
             set({ user: response.data.user });
           }

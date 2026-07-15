@@ -16,7 +16,6 @@ export const RestaurentScreen = () => {
   const { createRestaurent, getRestaurent, updateRestaurent } =
     useRestaurentStore();
   const restaurent = useRestaurentStore((state) => state.restaurent);
-  // console.log("restaurent", restaurent);
 
   const [errors, setErrors] = useState<Partial<restaurenInputState>>({});
   const [input, setInput] = useState<restaurenInputState>({
@@ -41,7 +40,7 @@ export const RestaurentScreen = () => {
       setErrors(fieldErrors as Partial<restaurenInputState>);
       return;
     }
-    // console.log(input);
+  
     const formData = new FormData();
     formData.append("restaurentName", input.restaurentName);
     formData.append("city", input.city);
@@ -66,13 +65,13 @@ export const RestaurentScreen = () => {
     const fetchRestaurent = async () => {
       await getRestaurent();
       if (restaurent) {
-        // console.log(restaurent);
+        
 
         setInput({
           restaurentName: restaurent.restaurentName || "",
           city: restaurent.city || "",
           country: restaurent.country || "",
-          deliveryTime: restaurent.deliveryTime.toString() || 0,
+          deliveryTime: restaurent.deliveryTime || 0,
           cuisines: restaurent.cuisines
             ? restaurent.cuisines.map((cuisine: string) => cuisine)
             : [],

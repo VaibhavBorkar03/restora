@@ -40,7 +40,7 @@ export const VerifyEmail = () => {
 
     const verificationCode = otp.join("");
 
-    // console.log("verificationCode", verificationCode);
+    
     const success = await verifyEmail(verificationCode);
     if (success) {
       navigate("/login");

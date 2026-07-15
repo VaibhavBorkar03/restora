@@ -17,15 +17,12 @@ export const useOrderStore = create<OrderState>()(
             checkoutSession,
             { headers: { "Content-Type": "application/json" } },
           );
-          console.log("response", response);
-          console.log("response.data.session.url", response.data.session.url);
-
-          console.log("indow.location.href", window.location.href);
+          
 
           window.location.href = response.data.session.url;
         } catch (error: any) {
           toast.error(error.response.data.message);
-          console.log(error);
+          
         }
       },
       getOrderDetails: async () => {

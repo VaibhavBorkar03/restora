@@ -51,7 +51,7 @@ export const AddMenuScreen = () => {
 
   const { addMenu } = useMenuStore();
   const restaurent = useRestaurentStore((state) => state.restaurent);
-  // console.log("restaurent menu", restaurent);
+  
 
   const [editMenuOpen, setEditMenuOpen] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<any>();

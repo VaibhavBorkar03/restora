@@ -6,12 +6,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -40,13 +35,22 @@ import { useUserStore } from "@/store/useUserStore";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import { useCartStore } from "@/store/useCartStore";
+import ThemeToggle from "./ThemeToggle";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useThemeStore } from "@/store/useThemeStore";
 
 export const Navbar = () => {
+  const { setTheme } = useThemeStore();
   const { user, setUser, setAuthenticated, loading } = useUserStore();
   const navigate = useNavigate();
   const { cart } = useCartStore();
-  // console.log("cart", cart);
-  // console.log(user);
+  
 
   const handleLogout = async () => {
     try {
@@ -102,20 +106,18 @@ export const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">
-                    <Sun
-                      className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-300 
-                         dark:-rotate-90 dark:scale-0 text-yellow-500"
-                    />
-                    <Moon
-                      className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all duration-300 
-                          dark:rotate-0 dark:scale-100 text-slate-200"
-                    />
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     <span className="sr-only">Toggle theme</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>light</DropdownMenuItem>
-                  <DropdownMenuItem>dark</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    Dark
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -129,12 +131,8 @@ export const Navbar = () => {
             </Link>
             <div>
               <Avatar>
-                <AvatarImage
-                  src={"https://github.com/shadcn.png"}
-                  alt="@shadcn"
-                  className="grayscale"
-                />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={user?.profilePicture} alt="@shadcn" />
+                <AvatarFallback>{user?.fullname}</AvatarFallback>
               </Avatar>
             </div>
             <div className="mx-8">
@@ -193,7 +191,8 @@ const MobileNavbar = () => {
               Rest<span className=" text-orange font-extrabold">Ora</span>
             </h2>
           </SheetTitle>
-          <DropdownMenu>
+          <ThemeToggle />
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0 text-yellow-500" />
@@ -209,7 +208,7 @@ const MobileNavbar = () => {
               <DropdownMenuItem>light</DropdownMenuItem>
               <DropdownMenuItem>dark</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </SheetHeader>
         <Separator className="w-2" />
         <SheetDescription className="flex-1">
@@ -264,12 +263,8 @@ const MobileNavbar = () => {
           {/* avatar */}
           <div className="flex gap-4 items-center">
             <Avatar>
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                alt="@shadcn"
-                className="grayscale"
-              />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={user?.profilePicture} alt={user?.fullname} />
+              <AvatarFallback>{user?.fullname}</AvatarFallback>
             </Avatar>
             <h2 className="font-bold text-xl">ResTora</h2>
           </div>
