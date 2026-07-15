@@ -13,7 +13,6 @@ export const verificationEmail = async (
 ) => {
   const recipient = [{ email }];
   const verifyEmailHtm = verifyEmailHtml(verificationToken);
-  // console.log("verifyEmailHtm", verifyEmailHtm);
 
   try {
     const res = await client.send({
@@ -24,7 +23,6 @@ export const verificationEmail = async (
       category: "Email verification",
     });
   } catch (error) {
-    console.log(error);
     throw new Error("Internal server error");
   }
 };
@@ -43,7 +41,6 @@ export const sendPasswordResetEmail = async (
       category: "Reset Password",
     });
   } catch (error) {
-    console.log(error);
     throw new Error("Internal server error");
   }
 };

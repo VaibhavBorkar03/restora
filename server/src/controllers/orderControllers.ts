@@ -83,8 +83,10 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       session,
     });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -216,5 +218,22 @@ export const createLineItems = (
   } catch (error) {
     console.log(error);
     throw new Error("Internal server error");
+  }
+};
+
+export const getOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find({ user: req.id })
+      .populate("user")
+      .populate("restaurent");
+
+    return res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };

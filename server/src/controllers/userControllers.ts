@@ -27,10 +27,10 @@ export const signup = async (req: Request, res: Response) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    // console.log("hashPassword", hashPassword);
+    
     // generate verification code/otp
     const verificationToken = generateVerificationCode();
-    // console.log("verificationToken", verificationToken);
+    
 
     user = await User.create({
       fullname,
@@ -41,7 +41,7 @@ export const signup = async (req: Request, res: Response) => {
       verificationTokenExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
-    // console.log("Email", user.email);
+    
 
     await verificationEmail(user.email, verificationToken);
 
@@ -50,7 +50,7 @@ export const signup = async (req: Request, res: Response) => {
       message: "Otp send on your mail",
     });
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -62,7 +62,7 @@ export const signup = async (req: Request, res: Response) => {
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
     const { verificationCode } = req.body;
-    // console.log("verificationCode", verificationCode);
+    
 
     const user = await User.findOne({
       //otp
@@ -85,7 +85,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     generateToken(res, user);
     await sendWelcomeEmail(user.email, user.fullname);
 
-    // console.log("user object", user.toObject());
+    
 
     return res.status(200).json({
       success: true,
@@ -93,7 +93,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -104,7 +104,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    // console.log("email, password", email, password);
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -113,8 +112,6 @@ export const login = async (req: Request, res: Response) => {
         message: "User is not exist with this email",
       });
     }
-
-    // console.log("user.password", user.password);
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
@@ -128,7 +125,6 @@ export const login = async (req: Request, res: Response) => {
     user.lastLogin = new Date();
     await user.save();
 
-    // console.log("user object", user.toObject());
     const userWithoutPwd = await User.findOne({ email }).select("-password");
 
     return res.status(200).json({
@@ -137,7 +133,7 @@ export const login = async (req: Request, res: Response) => {
       user: userWithoutPwd,
     });
   } catch (error) {
-    console.log(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -152,7 +148,6 @@ export const logout = async (req: Request, res: Response) => {
       message: "Loguot successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -163,8 +158,7 @@ export const logout = async (req: Request, res: Response) => {
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    // console.log("email", email);
-
+    
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
@@ -180,11 +174,9 @@ export const forgotPassword = async (req: Request, res: Response) => {
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpiresAt = resetTokenExpiresAt;
 
-    // console.log(" user.resetPasswordToken", user.resetPasswordToken);
-    // console.log("user.resetPasswordExpiresAt", user.resetPasswordExpiresAt);
 
     await user.save();
-    // console.log("user", user);
+
 
     //send reset link to email for forgot password
     await sendPasswordResetEmail(
@@ -197,7 +189,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
       message: "password reset link send to your email, check it",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -210,8 +201,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     const { token } = req.params;
     const { newPassword } = req.body;
 
-    // console.log("token", token);
-    // console.log("newPassword", newPassword);
 
     const user = await User.findOne({
       resetPasswordToken: token,
@@ -238,7 +227,6 @@ export const resetPassword = async (req: Request, res: Response) => {
       message: "Your password reset successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -264,7 +252,7 @@ export const checkAuth = async (req: Request, res: Response) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).json({
       success: false,
       message: "Internal server errror",
@@ -305,7 +293,7 @@ export const updateProfile = async (req: Request, res: Response) => {
       message: "Profile Updated Succesfully",
     });
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).json({
       success: false,
       message: "Internal server errror",

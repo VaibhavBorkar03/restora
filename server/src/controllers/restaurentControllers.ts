@@ -6,23 +6,10 @@ import { Order } from "../model/orderModel.js";
 export const createRestaurent = async (req: Request, res: Response) => {
   try {
     const { restaurentName, city, country, deliveryTime, cuisines } = req.body;
-    // console.log(
-    //   "restaurentName, city, country, deliveryTime, cuisines",
-    //   restaurentName,
-    //   city,
-    //   country,
-    //   deliveryTime,
-    //   cuisines,
-    // );
 
     const file = req.file;
-    // console.log("image file", file);
-
-    // console.log(" req.id ", req.id);
 
     const restaurent = await Restaurent.findOne({ user: req.id });
-
-    // console.log("restaurent", restaurent);
 
     if (restaurent) {
       return res.status(404).json({
@@ -39,7 +26,6 @@ export const createRestaurent = async (req: Request, res: Response) => {
     }
 
     const imageUrl = await uploadImageOnCloudinary(file as Express.Multer.File);
-    // console.log("imageUrl", imageUrl);
 
     const cuisinesArray = cuisines
       .split(",")
@@ -60,8 +46,10 @@ export const createRestaurent = async (req: Request, res: Response) => {
       message: "Restaurent created successfully",
     });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -107,8 +95,10 @@ export const updateRestaurent = async (req: Request, res: Response) => {
       restaurent,
     });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -130,8 +120,10 @@ export const getRestaurent = async (req: Request, res: Response) => {
       restaurent,
     });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -145,14 +137,16 @@ export const getRestaurentOrders = async (req: Request, res: Response) => {
       });
     }
 
-    const orders = Order.find({ restaurent: restaurent.id })
+    const orders = await Order.find({ restaurent: restaurent._id })
       .populate("restaurent")
       .populate("user");
 
     return res.status(200).json({ success: true, orders });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -178,8 +172,10 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
       message: "Status updated",
     });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -216,8 +212,10 @@ export const searchRestaurent = async (req: Request, res: Response) => {
       data: restaurent,
     });
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal server error");
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -238,6 +236,9 @@ export const getRestaurentById = async (req: Request, res: Response) => {
       restaurent,
     });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };

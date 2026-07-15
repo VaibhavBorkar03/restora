@@ -34,7 +34,6 @@ export const addMenu = async (req: Request, res: Response) => {
       menu,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -45,11 +44,11 @@ export const addMenu = async (req: Request, res: Response) => {
 export const editMenu = async (req: Request, res: Response) => {
   try {
     const menuId = req.params.id;
-    // console.log("menuId", menuId);
+    
 
     const { name, description, price } = req.body;
     const file = req.file;
-    // console.log(" name, description, price", name, description, price);
+    
 
     const menu = await Menu.findById(menuId);
 
@@ -76,7 +75,7 @@ export const editMenu = async (req: Request, res: Response) => {
       menu,
     });
   } catch (error) {
-    console.log(error);
+
     return res.status(500).json({
       success: false,
       message: "Internal server error",

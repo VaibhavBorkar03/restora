@@ -19,10 +19,10 @@ router
   .get(isAuthenticated, getRestaurent)
   .put(isAuthenticated, upload.single("imageFile"), updateRestaurent);
 
+router.route("/orders").get(isAuthenticated, getRestaurentOrders);
 router.route("/:id").get(isAuthenticated, getRestaurentById);
 
-router.route("/orders").get(isAuthenticated, getRestaurentOrders);
-router.route("/order/:id/status").put(isAuthenticated, updateOrderStatus);
+router.route("/order/:orderId/status").put(isAuthenticated, updateOrderStatus);
 router.route("/search/:searchText").get(isAuthenticated, searchRestaurent);
 
 export default router;
