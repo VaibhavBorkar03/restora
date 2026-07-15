@@ -9,9 +9,12 @@ import restaurantRoutes from "./routes/restauentRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import { stripeWebhook } from "./controllers/orderControllers.js";
+import path from "path";
 dotenv.config();
 
 const app = express();
+const __dirname = path.resolve();
+console.log("__dirname", __dirname);
 
 app.post(
   "/api/v1/order/webhook",
@@ -25,7 +28,7 @@ app.use(cookieParser());
 // app.use(bodyParser.json({ limit: "10mb" }));
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.FRONTEND_URL,
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -38,6 +41,13 @@ app.use("/api/v1/order", orderRoutes);
 // http://localhost:8000//api/v1/user/signup
 
 const PORT = process.env.PORT || 8000;
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+//for unkonwn route hits shows frontend home screen
+
+app.get(/.*/, (_, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+});
 
 app.listen(PORT, () => {
   connectDB();

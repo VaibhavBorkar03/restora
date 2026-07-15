@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
-    "tsx": "tsx src/index.ts",
-    "build": "tsc",
+    "build": "npm install && npm --prefix client install && npm --prefix client run build && tsc -p server",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -36,7 +35,7 @@
     "@types/node": "^26.0.1",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
-    "tsx": "^4.22.4",
+    "tsx": "^4.23.1",
     "typescript": "^6.0.3"
   }
 }
